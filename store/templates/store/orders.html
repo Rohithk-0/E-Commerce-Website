@@ -1,0 +1,127 @@
+{% extends 'store/layouts/main.html' %}
+{% block title %}My Orders | ANOMIE{% endblock %}
+
+{% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: #f4f7fb;
+    margin: 0;
+    padding: 0;
+  }
+
+  .orders-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+
+  .orders-container h2 {
+    text-align: center;
+    font-size: 2em;
+    color: #111;
+    margin-bottom: 30px;
+    animation: fadeInDown 1s ease-out;
+  }
+
+  /* Table styling */
+  .orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    animation: fadeInUp 1s ease-out;
+  }
+
+  .orders-table th,
+  .orders-table td {
+    padding: 15px 20px;
+    text-align: left;
+  }
+
+  .orders-table th {
+    background: #111;
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .orders-table tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+
+  .orders-table tr:hover {
+    background: #eef2f7;
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+  }
+
+  /* Status colors */
+  .status-pending { color: #ffa500; font-weight: 500; }
+  .status-completed { color: #28a745; font-weight: 500; }
+  .status-cancelled { color: #dc3545; font-weight: 500; }
+
+  .no-orders {
+    text-align: center;
+    font-size: 1.2em;
+    color: #555;
+    margin-top: 50px;
+    animation: fadeInUp 1s ease-out;
+  }
+
+  @keyframes fadeInDown {
+    from {opacity:0; transform: translateY(-50px);}
+    to {opacity:1; transform: translateY(0);}
+  }
+
+  @keyframes fadeInUp {
+    from {opacity:0; transform: translateY(50px);}
+    to {opacity:1; transform: translateY(0);}
+  }
+</style>
+
+<div class="orders-container">
+  <h2>My Orders</h2>
+
+  {% if orders %}
+  <table class="orders-table">
+    <tr>
+      <th>Order ID</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Total</th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+      <td>#{{ order.id }}</td>
+      <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+      <td class="status-{% if order.status == 'Pending' %}pending{% elif order.status == 'Completed' %}completed{% else %}cancelled{% endif %}">
+        {{ order.status }}
+      </td>
+      <td>${{ order.total_amount }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <div class="no-orders">You haven’t placed any orders yet.</div>
+  {% endif %}
+</div>
+
+<script>
+  // Animate table rows sequentially
+  const rows = document.querySelectorAll('.orders-table tr:not(:first-child)');
+  rows.forEach((row, index) => {
+    row.style.opacity = 0;
+    row.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+      row.style.transition = 'all 0.5s ease-out';
+      row.style.opacity = 1;
+      row.style.transform = 'translateY(0)';
+    }, index * 100);
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends 'store/layouts/main.html' %}
+{% load static %}
+{% block title %}ANOMIE | Home{% endblock %}
+
+{% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f9f9f9;
+  }
+
+  .hero-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    height: 500px;
+    margin: 50px auto;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .slide {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .slide-quote {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-size: 2em;
+    text-align: center;
+    text-shadow:
+      2px 2px 4px rgba(0,0,0,0.8),
+      4px 4px 10px rgba(0,0,0,0.6),
+      0 0 20px rgba(0,0,0,0.5),
+      0 0 30px rgba(0,0,0,0.4);
+    opacity: 0;
+    animation: fadeText 1.5s forwards;
+    max-width: 80%;
+  }
+
+  @keyframes fadeText {
+    from {opacity: 0; transform: translate(-50%, -60%);}
+    to {opacity: 1; transform: translate(-50%, -50%);}
+  }
+
+  .slider-buttons {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 2;
+  }
+
+  .slider-buttons button {
+    background-color: rgba(255,255,255,0.7);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  .slider-buttons button:hover {
+    background-color: rgba(255,255,255,1);
+  }
+
+  .welcome-section {
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  .welcome-section h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+  }
+
+  .welcome-section p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #555;
+  }
+
+  .welcome-section button {
+    margin: 0 10px;
+    padding: 12px 25px;
+    font-size: 1em;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    background: #111;
+    color: #fff;
+    transition: all 0.3s;
+  }
+
+  .welcome-section button:hover {
+    background: #444;
+    transform: translateY(-3px);
+  }
+
+</style>
+
+<div class="hero-container">
+  <div class="slide" style="background-image: url('{% static 'images/slider1.jpg' %}');">
+    <div class="slide-quote">"Fashion is the armor to survive the reality of everyday life." – Bill Cunningham</div>
+  </div>
+  <div class="slide" style="background-image: url('{% static 'images/slider2.jpg' %}');">
+    <div class="slide-quote">"Style is a way to say who you are without having to speak." – Rachel Zoe</div>
+  </div>
+  <div class="slide" style="background-image: url('{% static 'images/slider3.jpg' %}');">
+    <div class="slide-quote">"Clothes mean nothing until someone lives in them." – Marc Jacobs</div>
+  </div>
+
+  <div class="slider-buttons">
+    <button id="prev">&#10094;</button>
+    <button id="next">&#10095;</button>
+  </div>
+</div>
+
+<div class="welcome-section">
+  <h1>Welcome to <strong>ANOMIE</strong></h1>
+  <p>Your premium clothing brand.</p>
+  <a href="{% url 'login' %}"><button>Login</button></a>
+  <a href="{% url 'register' %}"><button>Register</button></a>
+</div>
+
+<script>
+  let slideIndex = 0;
+  const slides = document.getElementsByClassName('slide');
+  const totalSlides = slides.length;
+
+  function showSlide(index) {
+    for (let i = 0; i < totalSlides; i++) {
+      slides[i].style.display = 'none';
+      slides[i].querySelector('.slide-quote').style.opacity = 0;
+    }
+    slides[index].style.display = 'block';
+    slides[index].querySelector('.slide-quote').style.animation = 'fadeText 1.5s forwards';
+  }
+
+  function nextSlide() {
+    slideIndex = (slideIndex + 1) % totalSlides;
+    showSlide(slideIndex);
+  }
+
+  function prevSlide() {
+    slideIndex = (slideIndex - 1 + totalSlides) % totalSlides;
+    showSlide(slideIndex);
+  }
+
+  document.getElementById('next').addEventListener('click', nextSlide);
+  document.getElementById('prev').addEventListener('click', prevSlide);
+
+  // Automatic slider
+  setInterval(nextSlide, 5000);
+
+  // Initialize first slide
+  showSlide(slideIndex);
+</script>
+{% endblock %}

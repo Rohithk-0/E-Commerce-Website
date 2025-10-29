@@ -1,0 +1,230 @@
+{% extends 'store/layouts/main.html' %}
+{% block title %}Shop | ANOMIE{% endblock %}
+
+{% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: #f4f7fb;
+    margin: 0;
+    padding: 0;
+  }
+
+  .shop-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+
+  .shop-container h1 {
+    text-align: center;
+    font-size: 2.5em;
+    color: #111;
+    margin-bottom: 20px;
+    animation: fadeInDown 1s ease-out;
+  }
+
+  /* Search bar styling */
+  .shop-search {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .shop-search input[type="text"] {
+    width: 300px;
+    max-width: 80%;
+    padding: 12px 15px;
+    border-radius: 50px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 1em;
+    transition: all 0.3s ease;
+  }
+
+  .shop-search input[type="text"]:focus {
+    border-color: #111;
+    box-shadow: 0 0 10px rgba(17,17,17,0.2);
+    transform: scale(1.02);
+  }
+
+  .shop-search button {
+    padding: 12px 25px;
+    border-radius: 50px;
+    border: none;
+    background: #111;
+    color: #fff;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .shop-search button:hover {
+    background: #444;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  /* Category buttons */
+  .shop-categories {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .shop-categories a button {
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 50px;
+    border: 1px solid #111;
+    background: #fff;
+    color: #111;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .shop-categories a button:hover,
+  .shop-categories a button.active {
+    background: #111;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  /* Product grid */
+  .product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+  }
+
+  .product-card {
+    background: #fff;
+    width: 220px;
+    border-radius: 20px;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeInUp 1s ease-out;
+  }
+
+  .product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+
+  .product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .product-card img:hover {
+    transform: scale(1.05);
+  }
+
+  .product-card h4 {
+    margin: 15px 0 5px 0;
+    font-size: 1.1em;
+    color: #111;
+  }
+
+  .product-card p {
+    color: #555;
+    margin-bottom: 10px;
+  }
+
+  .product-card button {
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: none;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+  }
+
+  .product-card button:hover {
+    background: #444;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  .no-products {
+    text-align: center;
+    font-size: 1.2em;
+    color: #555;
+    margin-top: 50px;
+    animation: fadeInUp 1s ease-out;
+  }
+
+  @keyframes fadeInDown {
+    from {opacity:0; transform: translateY(-50px);}
+    to {opacity:1; transform: translateY(0);}
+  }
+
+  @keyframes fadeInUp {
+    from {opacity:0; transform: translateY(50px);}
+    to {opacity:1; transform: translateY(0);}
+  }
+
+  @media screen and (max-width: 900px) {
+    .product-grid {
+      gap: 15px;
+    }
+  }
+</style>
+
+<div class="shop-container">
+  <h1>🛒 ANOMIE Shop</h1>
+
+  <div class="shop-search">
+    <form method="get" action="{% url 'shop' %}">
+      <input type="text" name="q" placeholder="Search for products..." value="{{ query|default:'' }}">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <div class="shop-categories">
+    <a href="{% url 'shop' %}"><button class="{% if not selected_category %}active{% endif %}">All</button></a>
+    {% for cat in categories %}
+      <a href="?category={{ cat.slug }}"><button class="{% if selected_category == cat.slug %}active{% endif %}">{{ cat.name }}</button></a>
+    {% endfor %}
+  </div>
+
+  {% if products %}
+  <div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+      <a href="{% url 'product_detail' product.id %}">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+      </a>
+      <h4>{{ product.name }}</h4>
+      <p>${{ product.price }}</p>
+      <a href="{% url 'add_to_cart' product.id %}"><button>Add to Cart</button></a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="no-products">No products found.</div>
+  {% endif %}
+</div>
+
+<script>
+  // Animate product cards sequentially
+  const cards = document.querySelectorAll('.product-card');
+  cards.forEach((card, index) => {
+    card.style.opacity = 0;
+    card.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+      card.style.transition = 'all 0.5s ease-out';
+      card.style.opacity = 1;
+      card.style.transform = 'translateY(0)';
+    }, index * 100);
+  });
+</script>
+{% endblock %}

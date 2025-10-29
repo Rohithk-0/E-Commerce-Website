@@ -1,0 +1,91 @@
+<!-- navbar.html -->
+<nav class="navbar">
+    <div class="navbar-container">
+      <a href="{% url 'dashboard' %}" class="nav-logo">ANOMIE</a>
+      <div class="nav-links">
+        <a href="{% url 'dashboard' %}">Home</a>
+        <a href="{% url 'shop' %}">Shop</a>
+        <a href="{% url 'about' %}">About</a>
+       <a href="{% url 'contact' %}">Contact</a>
+        <a href="{% url 'logout' %}" class="logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+  
+  <style>
+    .navbar {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: #111;
+      color: #fff;
+      padding: 15px 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      z-index: 100;
+      animation: slideDown 0.8s ease-out;
+    }
+  
+    .navbar-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    .nav-logo {
+      font-size: 1.8em;
+      font-weight: 700;
+      text-decoration: none;
+      color: #fff;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+  
+    .nav-logo:hover {
+      color: #ff4081;
+      transform: scale(1.05);
+    }
+  
+    .nav-links a {
+      color: #fff;
+      margin-left: 25px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+  
+    .nav-links a:hover {
+      color: #ff4081;
+      transform: translateY(-2px);
+    }
+  
+    .nav-links a.logout {
+      color: #ff4c4c;
+      font-weight: 600;
+    }
+  
+    .nav-links a.logout:hover {
+      color: #ff6f6f;
+      transform: translateY(-2px);
+    }
+  
+    @keyframes slideDown {
+      from {opacity:0; transform: translateY(-50px);}
+      to {opacity:1; transform: translateY(0);}
+    }
+  
+    @media screen and (max-width: 768px) {
+      .navbar-container {
+        flex-direction: column;
+      }
+      .nav-links {
+        margin-top: 10px;
+      }
+      .nav-links a {
+        margin: 10px 0 0 0;
+      }
+    }
+  </style>
+  

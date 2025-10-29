@@ -1,0 +1,172 @@
+{% extends 'store/layouts/main.html' %}
+{% block title %}Add Product | ANOMIE{% endblock %}
+
+{% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #f0f0f0, #d9e4f5);
+    margin: 0;
+    padding: 0;
+  }
+
+  .add-product-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+  }
+
+  .add-product-box {
+    background: #fff;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 500px;
+    animation: fadeInUp 1s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {opacity: 0; transform: translateY(50px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  .add-product-box h2 {
+    margin-bottom: 30px;
+    font-size: 2em;
+    color: #111;
+  }
+
+  .add-product-box input,
+  .add-product-box select,
+  .add-product-box textarea {
+    width: 100%;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 50px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .add-product-box input:focus,
+  .add-product-box select:focus,
+  .add-product-box textarea:focus {
+    border-color: #111;
+    box-shadow: 0 0 10px rgba(17,17,17,0.3);
+    transform: scale(1.02);
+  }
+
+  .add-product-box textarea {
+    min-height: 100px;
+    resize: none;
+  }
+
+  .add-product-box button {
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 50px;
+    background: #111;
+    color: #fff;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .add-product-box button:hover {
+    background: #444;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+
+  /* Floating circles animations */
+  .add-product-box::before,
+  .add-product-box::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(17,17,17,0.05);
+    width: 200px;
+    height: 200px;
+    animation: float 6s infinite ease-in-out alternate;
+    z-index: 0;
+  }
+
+  .add-product-box::before {
+    top: -50px;
+    left: -50px;
+  }
+
+  .add-product-box::after {
+    bottom: -50px;
+    right: -50px;
+    animation-delay: 3s;
+  }
+
+  @keyframes float {
+    0% {transform: translateY(0) rotate(0deg);}
+    100% {transform: translateY(-20px) rotate(360deg);}
+  }
+
+  /* All elements inside box above floating circles */
+  .add-product-box * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Custom select styling */
+  .add-product-box select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: #fff url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12'><polygon points='0,0 12,0 6,6' fill='%23999'/></svg>") no-repeat right 15px center;
+    background-size: 12px;
+    padding-right: 40px;
+  }
+</style>
+
+<div class="add-product-container">
+  <div class="add-product-box">
+    <h2>Add New Product</h2>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="text" name="name" placeholder="Product Name" required>
+      <select name="category" required>
+        <option value="">Select Category</option>
+        <option value="T-Shirt">T-Shirt</option>
+        <option value="Hoodie">Hoodie</option>
+        <option value="Jacket">Jacket</option>
+        <option value="Pants">Pants</option>
+        <option value="Accessories">Accessories</option>
+      </select>
+      <textarea name="description" placeholder="Description"></textarea>
+      <input type="number" step="0.01" name="price" placeholder="Price" required>
+      <input type="file" name="image" accept="image/*" required>
+      <button type="submit">Add Product</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Optional: subtle hover/focus JS animation for inputs
+  const inputs = document.querySelectorAll('.add-product-box input, .add-product-box textarea, .add-product-box select');
+  inputs.forEach(input => {
+    input.addEventListener('focus', () => {
+      input.style.backgroundColor = 'rgba(240,240,240,0.8)';
+    });
+    input.addEventListener('blur', () => {
+      input.style.backgroundColor = '#fff';
+    });
+  });
+</script>
+{% endblock %}
